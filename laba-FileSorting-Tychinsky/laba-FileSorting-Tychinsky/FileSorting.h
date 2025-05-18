@@ -1,5 +1,9 @@
-#pragma once
+﻿#pragma once
 
-void CreateFile(const std::string& fileName, const int minNum, const int maxNum, const int amountNum);
+//требуемые функции
+bool createFileWithRandomNumbers(const std::string& fileName, const int numbersCount, const int maxNumberValue);
+bool isFileContainsSortedArray(const std::string& fileName);
+int createAndSortFile(const std::string& fileName, const int numbersCount, const int maxNumberValue);
 
-void Print(const std::string& fileName);
+//файловые сортировки
+

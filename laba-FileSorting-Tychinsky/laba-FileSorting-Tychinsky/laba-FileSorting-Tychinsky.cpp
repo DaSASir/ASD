@@ -3,21 +3,29 @@
 #include <string>
 #include "FileSorting.h"
 
-const int fileAmount = 5;
-
 int main() {
     setlocale(LC_ALL, "ru");
     srand(time(0));
 
-    using std::cout;
+    std::string fileName = "MainFile.txt";
+    const int numbersCount = 1000000;
+    const int maxNumberValue = 100000;
 
-    cout << "MainFile: ";
-    CreateFile("MainFile.txt", -100, 100, 10);
-    Print("MainFile.txt");
-    
+    for (int i = 0; i < 10; i++) {
+        switch (createAndSortFile(fileName, numbersCount, maxNumberValue)) {
+        case 1:
+            std::cout << "Test passed." << std::endl;
+            break;
 
+        case -1:
+            std::cout << "Test failed: can't create file." << std::endl;
+            break;
 
-
+        case -2:
+            std::cout << "Test failed: file isn't sorted." << std::endl;
+            break;
+        }
+    }
 
     return 0;
 }

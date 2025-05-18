@@ -1,23 +1,33 @@
-#include "FileSorting.h"
-#include <iostream>
+﻿#include <iostream>
 #include <fstream>
 #include <string>
+#include "FileSorting.h"
 
-void CreateFile(const std::string& fileName, const int minNum, const int maxNum, const int amountNum) {
-    std::ofstream file(fileName);
-    if (!file.is_open())
-        exit(-1);
-    for (int i = 0; i < amountNum; i++)
-        file << rand() % (maxNum - minNum + 1) + minNum << " ";
-    file.close();
+//требуемые функции
+bool createFileWithRandomNumbers(const std::string& fileName, const int numbersCount, const int maxNumberValue) {
+
+
+
+    return false;
 }
 
-void Print(const std::string& fileName) {
-    std::ifstream file(fileName);
-    if (!file.is_open())
-        exit(-1);
-    int value;
-    while (file >> value)
-        std::cout << value << " ";
-    file.close();
+bool isFileContainsSortedArray(const std::string& fileName) {
+
+
+    return false;
 }
+
+int createAndSortFile(const std::string& fileName, const int numbersCount, const int maxNumberValue) {
+    if (!createFileWithRandomNumbers(fileName, numbersCount, maxNumberValue)) 
+        return -1;
+
+    //sortFile(fileName); //Вызов вашей функции сортировки
+
+    if (!isFileContainsSortedArray(fileName)) 
+        return -2;
+
+    return 1;
+}
+
+//файловые сортировки
+

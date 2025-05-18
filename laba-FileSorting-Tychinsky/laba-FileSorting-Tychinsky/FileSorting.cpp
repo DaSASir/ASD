@@ -4,6 +4,7 @@
 #include <random>
 #include <ctime>
 #include <vector>
+#include <limits>
 #include "FileSorting.h"
 
 //требуемые функции
@@ -59,40 +60,36 @@ int createAndSortFile(const std::string& fileName, const int numbersCount, const
 //файловые сортировки
 void mergersDirectAndNatural(const std::string& fileName, const bool sortType) {
     int p = 1;
-    splitFiles(fileName);
+    splitFiles(sortType, fileName);
 
     while (true) {
-        mergeFiles(p);
-
-        p *= 2;
-
         std::ifstream check("file1.txt");
+        if (!check.is_open()) {
+            std::cerr << "mergersDirectAndNatural: Error - check fail is not openning" << std::endl;
+            return;
+        }
         int value;
         if (!(check >> value)) break;
+        check.close();
 
+        sortType ? mergeFiles(sortType) : mergeFiles(sortType, p);
+        p *= 2;
     }
 
     std::ofstream fileMain(fileName);
     std::ifstream fileDop("file0.txt");
+    if (!fileMain.is_open() || !fileDop.is_open()) {
+        std::cerr << "mergersDirectAndNatural: Error - Main or Dop fail is not openning" << std::endl;
+        return;
+    }
     int value;
-    while (fileDop >> value)
+    while (fileDop >> value) 
         fileMain << value << " ";
-
-    //std::cout << "\n\nsplit:\n";
-    //for (int i = 0; i < 4; ++i) {
-    //    if (i == 2) std::cout << "\nmerge:\n";
-    //    std::ifstream test("file" + std::to_string(i) + ".txt");
-    //    int v;
-    //    while (test >> v)
-    //        std::cout << v << " ";
-    //    std::cout << std::endl;
-    //    test.close();
-    //}
-    //
-
+    fileMain.close();
+    fileDop.close();
 }
 
-void splitFiles(const std::string& fileName) {
+void splitFiles(const bool sortType, const std::string& fileName) {
     std::ifstream fileMain(fileName);
     std::ofstream fileDop1("file0.txt"), fileDop2("file1.txt");
     if (!fileMain.is_open() || !fileDop1.is_open() || !fileDop2.is_open()) {
@@ -100,17 +97,34 @@ void splitFiles(const std::string& fileName) {
         return;
     }
 
-    int value;
+    int value1, value2;
     int index = 0;
-    while (fileMain >> value)
-        (index++ % 2 == 0 ? fileDop1 : fileDop2) << value << " ";
+    switch (sortType) {
+    case false:
+        while (fileMain >> value1)
+            (index++ % 2 == 0 ? fileDop1 : fileDop2) << value1 << " ";
+        break;
+
+    case true:
+        fileMain >> value1;
+        while (fileMain >> value2) {
+            (index % 2 == 0 ? fileDop1 : fileDop2) << value1 << " ";
+            if (value1 > value2) {
+                (index % 2 == 0 ? fileDop1 : fileDop2) << std::numeric_limits<int>::max() << " ";
+                index++;
+            }
+            value1 = value2;
+        }
+        (index % 2 == 0 ? fileDop1 : fileDop2) << value1 << " ";
+        break;
+    }
 
     fileMain.close();
     fileDop1.close();
     fileDop2.close();
 }
 
-void mergeFiles(const int& p) {
+void mergeFiles(const bool sortType, const int p) {
     std::ifstream fileRead[2];
     std::ofstream fileWrite[2] = {
         std::ofstream("file2.txt"),
@@ -132,17 +146,21 @@ void mergeFiles(const int& p) {
 
     while (haveValue) {
         haveValue = false;
+        bool isLastStep = true;
         std::vector<int> block1, block2;
         int val;
 
         for (int i = 0; i < p && fileRead[0] >> val; ++i) {
+            if (val == std::numeric_limits<int>::max()) break;
             block1.push_back(val);
             haveValue = true;
         }
 
         for (int i = 0; i < p && fileRead[1] >> val; ++i) {
+            if (val == std::numeric_limits<int>::max()) break;
             block2.push_back(val);
             haveValue = true;
+            isLastStep = false;
         }
 
         if (!block1.empty() || !block2.empty()) {
@@ -160,6 +178,9 @@ void mergeFiles(const int& p) {
             while (j < block2.size())
                 fileWrite[indexOutFiles] << block2[j++] << " ";
 
+            if(sortType && isLastStep)
+                fileWrite[indexOutFiles] << std::numeric_limits<int>::max() << " ";
+
             indexOutFiles = (indexOutFiles + 1) % 2;
         }
     }
@@ -170,6 +191,8 @@ void mergeFiles(const int& p) {
     std::remove("file0.txt");
     std::remove("file1.txt");
 
-    std::rename("file2.txt", "file0.txt");
-    std::rename("file3.txt", "file1.txt");
+    if (std::rename("file2.txt", "file0.txt") != 0)
+        std::cerr << "mergeFiles: Error - problems in rename" << std::endl;
+    if (std::rename("file3.txt", "file1.txt") != 0)
+        std::cerr << "mergeFiles: Error - problems in rename" << std::endl;
 }

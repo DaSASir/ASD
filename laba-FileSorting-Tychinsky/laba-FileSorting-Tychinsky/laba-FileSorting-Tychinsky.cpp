@@ -3,22 +3,22 @@
 #include <string>
 #include "FileSorting.h"
 
+std::string fileName = "MainFile.txt";
+
 int main() {
     setlocale(LC_ALL, "ru");
     srand(time(0));
 
-    std::string fileName = "MainFile.txt";
+    createFileWithRandomNumbers(fileName, 10, 50);
 
-    createFileWithRandomNumbers(fileName, 10, 12);
-
-    std::cout << "\First File:";
+    std::cout << "First File:";
     std::ifstream test(fileName);
     int v;
     while (test >> v) 
         std::cout << v << " ";
     test.close();
 
-    mergersDirectAndNatural(fileName,1);
+    mergersDirectAndNatural(fileName);
 
     std::cout << "\nSorted File:";
     std::ifstream test1(fileName);

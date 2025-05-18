@@ -6,4 +6,8 @@ bool isFileContainsSortedArray(const std::string& fileName);
 int createAndSortFile(const std::string& fileName, const int numbersCount, const int maxNumberValue);
 
 //файловые сортировки
+void mergersDirectAndNatural(const std::string& fileName, const bool sortType = 0);
 
+//
+void splitFiles(const std::string& fileName);
+void mergeFiles(const int& p);

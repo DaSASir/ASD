@@ -8,6 +8,29 @@ int main() {
     srand(time(0));
 
     std::string fileName = "MainFile.txt";
+
+    createFileWithRandomNumbers(fileName, 10, 12);
+
+    std::cout << "\First File:";
+    std::ifstream test(fileName);
+    int v;
+    while (test >> v) 
+        std::cout << v << " ";
+    test.close();
+
+    mergersDirectAndNatural(fileName,1);
+
+    std::cout << "\nSorted File:";
+    std::ifstream test1(fileName);
+    int v1;
+    while (test1 >> v1)
+        std::cout << v1 << " ";
+    test1.close();
+
+
+    return 0;
+
+
     const int numbersCount = 1000000;
     const int maxNumberValue = 100000;
 

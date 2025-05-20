@@ -9,7 +9,7 @@ int main() {
     setlocale(LC_ALL, "ru");
     srand(time(0));
 
-    createFileWithRandomNumbers(fileName, 10, 50);
+    createFileWithRandomNumbers(fileName, 100, 50);
 
     std::cout << "First File:";
     std::ifstream test(fileName);
@@ -18,7 +18,9 @@ int main() {
         std::cout << v << " ";
     test.close();
 
-    mergersDirectAndNatural(fileName);
+    //mergersDirectAndNatural(fileName);
+    mergeMultiway(fileName);
+
 
     std::cout << "\nSorted File:";
     std::ifstream test1(fileName);

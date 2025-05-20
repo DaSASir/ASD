@@ -1,6 +1,7 @@
 ﻿#include <iostream>
 #include <fstream>
 #include <string>
+#include <ctime>
 #include "FileSorting.h"
 
 std::string fileName = "MainFile.txt";
@@ -9,35 +10,12 @@ int main() {
     setlocale(LC_ALL, "ru");
     srand(time(0));
 
-    createFileWithRandomNumbers(fileName, 100, 50);
-
-    std::cout << "First File:";
-    std::ifstream test(fileName);
-    int v;
-    while (test >> v) 
-        std::cout << v << " ";
-    test.close();
-
-    //mergersDirectAndNatural(fileName);
-    mergeMultiway(fileName);
-
-
-    std::cout << "\nSorted File:";
-    std::ifstream test1(fileName);
-    int v1;
-    while (test1 >> v1)
-        std::cout << v1 << " ";
-    test1.close();
-
-
-    return 0;
-
-
-    const int numbersCount = 1000000;
+    const int numbersCount = 100000;
     const int maxNumberValue = 100000;
 
+    std::clock_t start = clock();
     for (int i = 0; i < 10; i++) {
-        switch (createAndSortFile(fileName, numbersCount, maxNumberValue)) {
+        switch (createAndSortFile(fileName, numbersCount, maxNumberValue, 2)) {
         case 1:
             std::cout << "Test passed." << std::endl;
             break;
@@ -51,6 +29,9 @@ int main() {
             break;
         }
     }
+    std::clock_t stop = clock();
+    double timeChecker = double(stop - start) / double(CLOCKS_PER_SEC);
+    std::cout << "\nTime of programm working: " << timeChecker << "sec\n";
 
     return 0;
 }

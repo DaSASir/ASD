@@ -7,7 +7,7 @@
 #include <limits>
 #include "FileSorting.h"
 
-static const int COUNT_FILES = 3;
+static const int COUNT_FILES = 5;
 static const int FLAG = std::numeric_limits<int>::max();
 
 //требуемые функции
@@ -48,11 +48,21 @@ bool isFileContainsSortedArray(const std::string& fileName) {
     return true;
 }
 
-int createAndSortFile(const std::string& fileName, const int numbersCount, const int maxNumberValue) {
+int createAndSortFile(const std::string& fileName, const int numbersCount, const int maxNumberValue, const int sortType) {
     if (!createFileWithRandomNumbers(fileName, numbersCount, maxNumberValue)) 
         return -1;
 
-    //sortFile(fileName); //Вызов вашей функции сортировки
+    switch (sortType) {
+    case 1:
+        mergersDirectAndNatural(fileName, 0);
+        break;
+    case 2:
+        mergersDirectAndNatural(fileName, 1);
+        break;
+    case 3:
+        mergeMultiway(fileName);
+        break;
+    }
 
     if (!isFileContainsSortedArray(fileName)) 
         return -2;
@@ -88,7 +98,7 @@ void mergersDirectAndNatural(const std::string& fileName, const bool sortType) {
     }
 
     int value;
-    while (fileDop >> value) 
+    while (fileDop >> value && value != FLAG) 
         fileMain << value << " ";
 
     fileMain.close();
@@ -152,7 +162,6 @@ void mergeFiles(const bool sortType, const int p) {
 
     while (haveValue) {
         haveValue = false;
-        bool isLastStep = true;
         std::vector<int> block1, block2;
         int val;
 
@@ -166,7 +175,6 @@ void mergeFiles(const bool sortType, const int p) {
             if (val == FLAG) break;
             block2.push_back(val);
             haveValue = true;
-            isLastStep = false;
         }
 
         if (!block1.empty() || !block2.empty()) {
@@ -184,10 +192,11 @@ void mergeFiles(const bool sortType, const int p) {
             while (j < block2.size())
                 fileWrite[indexOutFiles] << block2[j++] << " ";
 
-            if(sortType && isLastStep)
+            if(sortType)
                 fileWrite[indexOutFiles] << FLAG << " ";
 
             indexOutFiles = (indexOutFiles + 1) % 2;
+            haveValue = true;
         }
     }
 

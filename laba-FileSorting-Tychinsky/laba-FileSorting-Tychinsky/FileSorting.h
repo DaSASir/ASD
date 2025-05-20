@@ -3,7 +3,7 @@
 //требуемые функции
 bool createFileWithRandomNumbers(const std::string& fileName, const int numbersCount, const int maxNumberValue);
 bool isFileContainsSortedArray(const std::string& fileName);
-int createAndSortFile(const std::string& fileName, const int numbersCount, const int maxNumberValue);
+int createAndSortFile(const std::string& fileName, const int numbersCount, const int maxNumberValue, const int sortTyp);
 
 //прямое и естественное слияния
 void mergersDirectAndNatural(const std::string& fileName, const bool sortType = false);

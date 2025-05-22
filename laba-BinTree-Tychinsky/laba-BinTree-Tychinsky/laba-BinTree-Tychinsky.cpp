@@ -1,5 +1,12 @@
 ﻿#include <iostream>
+#include "BinTree.h"
 
 int main() {
-    std::cout << "Hello World!\n";
+    setlocale(LC_ALL , "ru");
+
+    BinaryTree tree;
+
+    int* a = nullptr;
+    if (!a) std::cout << "a";
+
 }

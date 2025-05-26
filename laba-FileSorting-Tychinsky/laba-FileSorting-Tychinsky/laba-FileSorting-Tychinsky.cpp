@@ -6,6 +6,12 @@
 
 std::string fileName = "MainFile.txt";
 
+enum class SortType {
+    Direct = 1,
+    Natural = 2,
+    Multiway = 3
+};
+
 int main() {
     setlocale(LC_ALL, "ru");
     srand(time(0));
@@ -15,7 +21,7 @@ int main() {
 
     std::clock_t start = clock();
     for (int i = 0; i < 10; i++) {
-        switch (createAndSortFile(fileName, numbersCount, maxNumberValue, 2)) {
+        switch (createAndSortFile(fileName, numbersCount, maxNumberValue, (int)SortType::Direct)) {
         case 1:
             std::cout << "Test passed." << std::endl;
             break;

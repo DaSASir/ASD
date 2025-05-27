@@ -4,9 +4,18 @@
 int main() {
     setlocale(LC_ALL , "ru");
 
-    BinaryTree tree;
+    std::vector<int> v;
+    std::cout << "\nvector: ";
+    for (int i = 0; i < 10; ++i) {
+        v.push_back(i);
+        std::cout << i << " ";
+    }
 
-    int* a = nullptr;
-    if (!a) std::cout << "a";
+    BinaryTree tree(v);
+    std::cout << "\n\nTree: \n";
+    tree.printByLevels();
 
+
+
+    return 0;
 }

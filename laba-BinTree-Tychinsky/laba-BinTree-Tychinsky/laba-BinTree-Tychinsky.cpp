@@ -3,6 +3,7 @@
 
 int main() {
     setlocale(LC_ALL , "ru");
+    srand(time(0));
 
     std::vector<int> v;
     std::cout << "\nvector: ";
@@ -14,8 +15,9 @@ int main() {
     BinaryTree tree(v);
     std::cout << "\n\nTree: \n";
     tree.printByLevels();
-
-
+    
+    BinaryTree a = tree;
+    a.printByLevels();
 
     return 0;
 }

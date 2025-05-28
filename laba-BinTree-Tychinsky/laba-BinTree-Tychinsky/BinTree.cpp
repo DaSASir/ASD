@@ -63,95 +63,70 @@ BinaryTree::Node* BinaryTree::root() const {
 }
 
 int BinaryTree::height() const { 
-	return height_(m_root); 
+	return height(m_root);
 }
 
-int BinaryTree::height_(Node* root) const {
+int BinaryTree::height(Node* root) const {
 	if (!root) return 0;
-	int result = 1;
-	result += (height_(root->leftChild()) == 1 || height_(root->rightChild()) == 1) ? 1 : 0;
-	return result;
+	bool condition = (height(root->leftChild()) > height(root->rightChild()));
+	return (condition ? height(root->leftChild()) : height(root->rightChild())) + 1;
 }
 
 int BinaryTree::countOfNodes() const { 
-	return countOfNodes_(m_root); 
-}
+	if (!m_root) return 0;
 
-int BinaryTree::countOfNodes_(Node* root) const {
-	if (!root) return 0;
-	int result = 1;
-	result += countOfNodes_(m_root->leftChild());
-	result += countOfNodes_(m_root->rightChild());
+	int result = 0;
+	for (auto it = begin(); it != end(); it++)
+		++result;
+
 	return result;
 }
 
 std::vector<int> BinaryTree::getVector() const {
 	std::vector<int> keys;
-	getVector_(m_root, keys);
+	getVector(m_root, keys);
 	return keys;
 }
 
-void BinaryTree::getVector_(Node* root, std::vector<int>& keys) const {
+void BinaryTree::getVector(Node* root, std::vector<int>& keys) const {
 	if (!root) return;
-	getVector_(root->leftChild(), keys);
+	getVector(root->leftChild(), keys);
 	keys.push_back(root->key());
-	getVector_(root->rightChild(), keys);
+	getVector(root->rightChild(), keys);
 }
 
 int BinaryTree::min() const {
 	int min = 0;
-	if (m_root) {
-		min = m_root->key();
-		min_(m_root->leftChild(), min);
-		min_(m_root->rightChild(), min);
-	}
+	for (auto it = begin(); it != end(); it++) 
+		if (min > *it)
+			min = *it;
+
 	return min;
-}
-
-void BinaryTree::min_(Node* root, int& value) const {
-	if (!root) return;
-
-	if (root->key() < value)
-		value = root->key();
-
-	min_(m_root->leftChild(), value);
-	min_(m_root->rightChild(), value);
 }
 
 int BinaryTree::max() const {
 	int max = 0;
-	if (m_root) {
-		max = m_root->key();
-		max_(m_root->leftChild(), max);
-		max_(m_root->rightChild(), max);
-	}
+	for (auto it = begin(); it != end(); it++)
+		if (max < *it)
+			max = *it;
+
 	return max;
-}
-
-void BinaryTree::max_(Node* root, int& value) const {
-	if (!root) return;
-
-	if (root->key() > value)
-		value = root->key();
-
-	min_(m_root->leftChild(), value);
-	min_(m_root->rightChild(), value);
 }
 
 BinaryTree::Node* BinaryTree::add(const int key) {
 	if (m_root) 
-		return add_(m_root, key);
+		return add(m_root, key);
 	else 
 		return m_root = new Node(key);
 }
 
-BinaryTree::Node* BinaryTree::add_(Node* root, int key) {
+BinaryTree::Node* BinaryTree::add(Node* root, int key) {
 	if (!root) 
 		root = new Node(key);
 	else if (rand() % 2) 
-		root->setLeftChild(add_(root->leftChild(), key));
+		root->setLeftChild(add(root->leftChild(), key));
 	else 
-		root->setRightChild(add_(root->rightChild(), key));
+		root->setRightChild(add(root->rightChild(), key));
 	return root;
 }
 
@@ -180,72 +155,67 @@ BinaryTree::Node* BinaryTree::nlrSearch(Node* root, int key) const {
 }
 
 bool BinaryTree::isBalanced() const { 
-	return isBalanced_(m_root); 
+	return isBalanced(m_root);
 }
 
-bool BinaryTree::isBalanced_(Node* root) const {
+bool BinaryTree::isBalanced(Node* root) const {
 	if (!root) return true;
-	int left = isBalanced_(root->leftChild());
-	int right = isBalanced_(root->rightChild());
-	return (((left - right) <= 1) || ((right - left) <= 1)) && isBalanced_(root->leftChild()) && isBalanced_(root->rightChild());
+	int left = height(root->leftChild());
+	int right = height(root->rightChild());
+	bool balanceChilds = ((left - right) <= 1) && ((right - left) <= 1);
+	return balanceChilds && isBalanced(root->leftChild()) && isBalanced(root->rightChild());
 }
 
 int BinaryTree::level(int key) const {
-	return level_(m_root, key, 0);
+	return level(m_root, key, 0);
 }
 
-int BinaryTree::level_(Node* node, int key, int level) const {
+int BinaryTree::level(Node* node, int key, int level_) const {
 	if (!node) return -1;
 	if (node->key() == key) 
-		return level;
+		return level_;
 
-	int indexKey = level_(node->leftChild(), key, level + 1);
+	int indexKey = level(node->leftChild(), key, level_ + 1);
 	if (indexKey == -1)
-		indexKey = level_(node->rightChild(), key, level + 1);
+		indexKey = level(node->rightChild(), key, level_ + 1);
 	else
 		return indexKey;
 }
 
 void BinaryTree::printHorizontal() const { 
-	printHorizontal_(m_root, 1, 5); 
+	printHorizontal(m_root, 1, 5);
 }
 
-void BinaryTree::printHorizontal_(Node* root, int marginLeft, int levelSpacing) const {
+void BinaryTree::printHorizontal(Node* root, int marginLeft, int levelSpacing) const {
 	if (!root) return;
 
-	printHorizontal_(root->rightChild(), marginLeft + levelSpacing, levelSpacing);
+	printHorizontal(root->rightChild(), marginLeft + levelSpacing, levelSpacing);
 	std::cout << std::string(marginLeft, ' ') << root->key() << std::endl;
-	printHorizontal_(root->leftChild(), marginLeft + levelSpacing, levelSpacing);
+	printHorizontal(root->leftChild(), marginLeft + levelSpacing, levelSpacing);
 }
 
 void BinaryTree::printByLevels() const{
-	printByLevels_(m_root);
-}
-
-void BinaryTree::printByLevels_(Node* root, int space, int gap) const {
-	if (!root) return;
-
-	space += gap;
-
-	printByLevels_(root->rightChild(), space);
-
+	int current = -1;
+	for (auto it = begin(); it != end(); it++) {
+		if (current != level(*it)) {
+			std::cout << std::endl;
+			current = level(*it);
+			std::cout << "Level " << current << ": ";
+		}
+		std::cout << *it << " ";
+	}
 	std::cout << std::endl;
-	for (int i = gap; i < space; i++)
-		std::cout << " ";
-	std::cout << root->key() << "\n";
-
-	printByLevels_(root->leftChild(), space);
 }
 
 void BinaryTree::lrnPrint() const {
-	lrnPrint_(m_root);
+	lrnPrint(m_root);
 }
 
-void BinaryTree::lrnPrint_(Node* root) const {
+void BinaryTree::lrnPrint(Node* root) const {
 	if (!root) return;
 	
-	lrnPrint_(root->leftChild());
-	lrnPrint_(root->rightChild());
+	lrnPrint(root->leftChild());
+	lrnPrint(root->rightChild());
 	std::cout << root->key() << ' ';
 }
 
@@ -278,5 +248,5 @@ BinaryTree::ConstIterator BinaryTree::begin() const {
 	return TemplateIterator<const int>(m_root);
 }
 BinaryTree::ConstIterator BinaryTree::end() const {
-	return TemplateIterator< const int>(nullptr);
+	return TemplateIterator<const int>(nullptr);
 }

@@ -54,22 +54,17 @@ public:
 private:
 	Node* copy(Node* root) const;
 
-	int height_(Node* root) const;
-	int countOfNodes_(Node* root) const;
-	void getVector_(Node* node, std::vector<int>& keys) const;
+	int height(Node* root) const;
+	void getVector(Node* node, std::vector<int>& keys) const;
 
-	void min_(Node* root, int& value) const;
-	void max_(Node* root, int& value) const;
-
-	Node* add_(Node* root, int key);
+	Node* add(Node* root, int key);
 	Node* nlrSearch(Node* root, int key) const;
 
-	bool isBalanced_(Node* root) const;
-	int level_(Node* root, int key, int level) const;
+	bool isBalanced(Node* root) const;
+	int level(Node* root, int key, int level_) const;
 
-	void printHorizontal_(Node* root, int marginLeft, int levelSpacing) const;
-	void printByLevels_(Node* root, int space = 0, int gap = 4) const;
-	void lrnPrint_(Node* root) const;
+	void printHorizontal(Node* root, int marginLeft, int levelSpacing) const;
+	void lrnPrint(Node* root) const;
 
 private:
 	Node* m_root = nullptr;
@@ -98,24 +93,59 @@ private:
 template <typename T>
 class BinaryTree::TemplateIterator {
 public:
-	TemplateIterator(Node* cell) : m_cell(cell) {}
-
-	T& operator*() { return m_cell->key; }
-	const T& operator*() const { return m_cell->key; }
-	TemplateIterator operator++() {
-		//???????????
+	TemplateIterator(Node* cell) : m_cell(cell) {
+		if (m_cell) {
+			if (m_cell->leftChild())
+				unprocessedNodes.push_back(m_cell->leftChild());
+			if (m_cell->rightChild())
+				unprocessedNodes.push_back(m_cell->rightChild());
+		}
 	}
+
+	T& operator*() { 
+		return m_cell->key(); 
+	}
+
+	const T& operator*() const { 
+		return m_cell->key(); 
+	}
+
+	TemplateIterator operator++() {
+		if (unprocessedNodes.empty()) 
+			m_cell = nullptr; 
+		else {
+			m_cell = unprocessedNodes.front();
+
+			if (m_cell->leftChild())
+				unprocessedNodes.push_back(m_cell->leftChild());
+			if (m_cell->rightChild())
+				unprocessedNodes.push_back(m_cell->rightChild());
+
+			unprocessedNodes.pop_front();
+		}
+		return *this;
+	}
+
 	TemplateIterator operator++(int) {
 		TemplateIterator back = *this;
 		++(*this);
 		return back;
 	}
-	bool operator==(const TemplateIterator& other) const { return (m_cell == other.m_cell); }
-	bool operator!=(const TemplateIterator& other) const { return (m_cell != other.m_cell); }
 
-	Node* get() { return m_cell; };
+	bool operator==(const TemplateIterator& other) const { 
+		return (m_cell == other.m_cell); 
+	}
+
+	bool operator!=(const TemplateIterator& other) const { 
+		return (m_cell != other.m_cell); 
+	}
+
+	Node* get() { 
+		return m_cell; 
+	}
 
 protected:
 	Node* m_cell = nullptr;
+	std::list<Node*> unprocessedNodes; //BFS
 };
 

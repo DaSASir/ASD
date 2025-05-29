@@ -14,10 +14,10 @@ int main() {
 
     BinaryTree tree(v);
     std::cout << "\n\nTree: \n";
-    tree.printByLevels();
+    tree.printHorizontal();
     
-    BinaryTree a = tree;
-    a.printByLevels();
+    std::vector<int> a = tree.getVector();
+    for (int g : a) std::cout << g << " ";
 
     return 0;
 }

@@ -20,24 +20,26 @@ public:
 	~BinaryTree();
 
 	void clear();
-	void clearAfter(const Node* root);
+	void clearAfter(Node* root);
 
 	bool isEmpty() const;
 
 	Node* root() const;
 	int height() const;
 	int countOfNodes() const;
-	std::vector<int> getVector() const;
 
-	int min() const;
-	int max() const;
+	virtual std::vector<int> getVector() const;
 
-	Node* add(const int key);
-	bool remove(const int key);
-	Node* find(const int key) const;
+	virtual int min() const;
+	virtual int max() const;
+
+	virtual Node* add(const int key);
+	virtual bool remove(const int key);
+
+	virtual Node* find(const int key) const;
+	virtual int level(const int key) const;
 
 	bool isBalanced() const;
-	int level(int key) const;
 
 	void printHorizontal() const;
 	void printByLevels() const;
@@ -51,20 +53,23 @@ public:
 	ConstIterator begin() const;
 	ConstIterator end() const;
 
-private:
-	Node* copy(Node* root) const;
+protected:
+	Node* copy(const Node* root) const;
 
-	int height(Node* root) const;
-	void getVector(Node* node, std::vector<int>& keys) const;
+	Node* findParent(const Node* root) const;
+	Node* findReplacementNode(Node* root) const;
 
-	Node* add(Node* root, int key);
-	Node* nlrSearch(Node* root, int key) const;
+	int height(const Node* root) const;
+	void getVector(const Node* node, std::vector<int>& keys) const;
 
-	bool isBalanced(Node* root) const;
-	int level(Node* root, int key, int level_) const;
+	Node* add(Node* root, const  int key);
+	Node* nlrSearch(Node* root, const  int key) const;
 
-	void printHorizontal(Node* root, int marginLeft, int levelSpacing) const;
-	void lrnPrint(Node* root) const;
+	bool isBalanced(const Node* root) const;
+	int level(const Node* root, const int key, const int level_) const;
+
+	void printHorizontal(const Node* root, const int marginLeft, const int levelSpacing) const;
+	void lrnPrint(const Node* root) const;
 
 private:
 	Node* m_root = nullptr;
@@ -140,7 +145,7 @@ public:
 		return (m_cell != other.m_cell); 
 	}
 
-	Node* get() { 
+	Node* cell() { 
 		return m_cell; 
 	}
 

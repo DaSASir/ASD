@@ -21,7 +21,7 @@
   <PropertyGroup Label="Globals">
     <VCProjectVersion>17.0</VCProjectVersion>
     <Keyword>Win32Proj</Keyword>
-    <ProjectGuid>{0556c745-138a-4399-b03a-2cde15e218ef}</ProjectGuid>
+    <ProjectGuid>{4b4fc66d-c4fe-49a1-a47f-9fef4d134c81}</ProjectGuid>
     <RootNamespace>labaBinTreeSearchTychinsky</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
   </PropertyGroup>

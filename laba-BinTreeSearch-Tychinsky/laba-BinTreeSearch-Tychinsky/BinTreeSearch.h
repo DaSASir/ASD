@@ -3,8 +3,7 @@
 #include <stack>
 #include "../../laba-BinTree-Tychinsky/laba-BinTree-Tychinsky/BinTree.h"
 
-class BinaryTreeSearch :protected BinaryTree {
-	using BinaryTree::root;
+class BinaryTreeSearch : protected BinaryTree {
 public:
 	template<typename T>
 	class TemplateIterator;

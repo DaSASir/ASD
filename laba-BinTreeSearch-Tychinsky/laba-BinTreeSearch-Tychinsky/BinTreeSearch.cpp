@@ -37,19 +37,17 @@ int BinaryTreeSearch::min() const {
 
 	return node->key();
 
-	while ((bool)(node->leftChild()))
+
+
+
+	/*while ((bool)(node->leftChild()))
 		node = node->leftChild();
 
-	return node->key();
+	return node->key();*/
 }
 
 int BinaryTreeSearch::max() const {
-	Node* root = BinaryTree::m_root;
-
-	while (root->rightChild())
-		root = root->rightChild();
-
-	return root->key();
+	return 0;
 }
 
 BinaryTree::Node* BinaryTreeSearch::add(const int key) {
@@ -72,7 +70,7 @@ bool BinaryTreeSearch::remove(const int key) {
 }
 
 BinaryTree::Node* BinaryTreeSearch::find(const int key) const {
-	return find(BinaryTree::m_root, key);
+	return root();
 }
 
 BinaryTree::Node* BinaryTreeSearch::find(Node* root, const int key) const {

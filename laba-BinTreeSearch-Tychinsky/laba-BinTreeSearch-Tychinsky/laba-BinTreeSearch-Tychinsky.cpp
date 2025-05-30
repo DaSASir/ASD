@@ -22,7 +22,6 @@ int main() {
 	std::cout << "\n\n\n";
 
 	BinaryTreeSearch tree(vector);
-	tree.printBT();
 
 	std::cout << "MinValue: " << tree.min();
 

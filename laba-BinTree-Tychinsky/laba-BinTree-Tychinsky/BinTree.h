@@ -17,7 +17,7 @@ public:
 	BinaryTree(const std::vector<int>& vector);
 	BinaryTree(const BinaryTree& other);
 	BinaryTree(BinaryTree&& other) noexcept;
-	~BinaryTree();
+	virtual ~BinaryTree();
 
 	void clear();
 	void clearAfter(Node* root);

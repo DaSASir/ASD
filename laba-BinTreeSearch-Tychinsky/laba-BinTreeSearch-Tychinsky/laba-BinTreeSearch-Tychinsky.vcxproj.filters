@@ -18,5 +18,24 @@
     <ClCompile Include="laba-BinTreeSearch-Tychinsky.cpp">
       <Filter>Исходные файлы</Filter>
     </ClCompile>
+    <ClCompile Include="BinTreeSearch.cpp">
+      <Filter>Исходные файлы</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\laba-BinTree-Tychinsky\laba-BinTree-Tychinsky\BinTree.cpp">
+      <Filter>Исходные файлы</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="BinTreeSearch.h">
+      <Filter>Файлы заголовков</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\laba-BinTree-Tychinsky\laba-BinTree-Tychinsky\BinTree.h">
+      <Filter>Исходные файлы</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\laba-BinTree-Tychinsky\laba-BinTree-Tychinsky\laba-BinTree-Tychinsky.vcxproj.user">
+      <Filter>Исходные файлы</Filter>
+    </None>
   </ItemGroup>
 </Project>

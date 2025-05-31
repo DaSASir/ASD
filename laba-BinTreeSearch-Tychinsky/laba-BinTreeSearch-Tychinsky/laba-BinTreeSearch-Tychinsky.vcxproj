@@ -127,7 +127,16 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\laba-BinTree-Tychinsky\laba-BinTree-Tychinsky\BinTree.cpp" />
+    <ClCompile Include="BinTreeSearch.cpp" />
     <ClCompile Include="laba-BinTreeSearch-Tychinsky.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\laba-BinTree-Tychinsky\laba-BinTree-Tychinsky\BinTree.h" />
+    <ClInclude Include="BinTreeSearch.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\laba-BinTree-Tychinsky\laba-BinTree-Tychinsky\laba-BinTree-Tychinsky.vcxproj.user" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

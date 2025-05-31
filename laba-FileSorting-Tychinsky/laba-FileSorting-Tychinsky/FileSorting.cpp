@@ -193,7 +193,7 @@ void mergeMultiway(const std::string& fileName, const int COUNT_FILES) {
 
     bool fromFtoG = true;
 
-    splitMultiway(fileName, 5);
+    splitMultiway(fileName, COUNT_FILES);
     while (true) {
         std::ifstream checkFile((fromFtoG ? prefix_f : prefix_g) + "file1.txt");
         if (!checkFile.is_open()) {
@@ -206,9 +206,9 @@ void mergeMultiway(const std::string& fileName, const int COUNT_FILES) {
         checkFile.close();
 
         if (fromFtoG)
-            mergeMultiway(prefix_f, prefix_g, 5);
+            mergeMultiway(prefix_f, prefix_g, COUNT_FILES);
         else
-            mergeMultiway(prefix_g, prefix_f, 5);
+            mergeMultiway(prefix_g, prefix_f, COUNT_FILES);
 
         fromFtoG = !fromFtoG;
     }
@@ -270,8 +270,9 @@ void mergeMultiway(const std::string& from, const std::string& to, const int COU
 
     std::vector<int> segmentNumbers(COUNT_FILES);
     std::vector<bool> segmentActive(COUNT_FILES, false);
-    int lastElement = INT32_MIN;
-    int minValue = INT32_MAX;
+    std::vector<bool> futureActive(COUNT_FILES, false);
+    int minValue;
+    bool haveActivities;
 
     for (int i = 0; i < COUNT_FILES; ++i)
         segmentActive[i] = (bool)(file_f[i] >> segmentNumbers[i]);
@@ -279,6 +280,7 @@ void mergeMultiway(const std::string& from, const std::string& to, const int COU
     int indexFileG = 0;
     while (true) {
         int minIndex = -1;
+        minValue = INT32_MAX;
 
         for (int i = 0; i < COUNT_FILES; ++i)
             if (segmentActive[i] && segmentNumbers[i] < minValue) {
@@ -288,13 +290,35 @@ void mergeMultiway(const std::string& from, const std::string& to, const int COU
 
         if (minIndex == -1) break;
 
-        if (lastElement > minValue)
-            indexFileG = (indexFileG + 1) % COUNT_FILES;
-
         file_g[indexFileG] << minValue << " ";
-        lastElement = minValue;
 
-        segmentActive[minIndex] = (bool)(file_f[minIndex] >> segmentNumbers[minIndex]);
+        if (file_f[minIndex] >> segmentNumbers[minIndex])
+            if (segmentNumbers[minIndex] >= minValue)
+                segmentActive[minIndex] = true;
+            else {
+                segmentActive[minIndex] = false;
+                futureActive[minIndex] = true;
+            }
+        else
+            segmentActive[minIndex] = false;
+
+
+        haveActivities = false;
+        for (bool boo : segmentActive)
+            if (boo) {
+                haveActivities = true;
+                break;
+            }
+
+        if (!haveActivities) {
+            for (int i = 0; i < COUNT_FILES; ++i) 
+                if (futureActive[i]) {
+                    segmentActive[i] = true;
+                    futureActive[i] = false;
+                }
+
+            indexFileG = (indexFileG + 1) % COUNT_FILES;
+        }
     }
 
     for (int i = 0; i < COUNT_FILES; ++i) {

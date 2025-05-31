@@ -12,6 +12,7 @@ enum class SortType {
     Multiway = 3
 };
 
+//87 65 57 44 08 17 35 44 29 76 23
 int main() {
     setlocale(LC_ALL, "ru");
     srand(time(0));
@@ -21,7 +22,7 @@ int main() {
 
     std::clock_t start = clock();
     for (int i = 0; i < 10; i++) {
-        switch (createAndSortFile(fileName, numbersCount, maxNumberValue, (int)SortType::Direct)) {
+        switch (createAndSortFile(fileName, numbersCount, maxNumberValue, (int)SortType::Multiway)) {
         case 1:
             std::cout << "Test passed." << std::endl;
             break;

@@ -28,12 +28,12 @@ public:
 	int height() const;
 	int countOfNodes() const;
 
-	virtual std::vector<int> getVector() const;
+	std::vector<int> getVector() const;
 
 	virtual int min() const;
 	virtual int max() const;
 
-	virtual Node* add(const int key);
+	Node* add(const int key);
 	virtual bool remove(const int key);
 
 	virtual Node* find(const int key) const;
@@ -57,12 +57,12 @@ protected:
 	Node* copy(const Node* root) const;
 
 	Node* findParent(const Node* root) const;
-	Node* findReplacementNode(Node* root) const;
+	virtual Node* findReplacementNode(Node* root) const;
 
 	int height(const Node* root) const;
 	void getVector(const Node* node, std::vector<int>& keys) const;
 
-	Node* add(Node* root, const  int key);
+	virtual Node* add(Node* root, const  int key);
 	Node* nlrSearch(Node* root, const  int key) const;
 
 	bool isBalanced(const Node* root) const;

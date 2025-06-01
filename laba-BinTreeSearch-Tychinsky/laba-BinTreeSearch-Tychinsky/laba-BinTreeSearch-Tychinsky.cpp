@@ -20,6 +20,8 @@ int main() {
 
 	BinaryTreeSearch tree(v);
 
+	tree.printHorizontal();
+
 	std::cout << (tree.isEmpty() ? "empty\n" : "not empty\n");
 	std::cout << "Min: " << tree.min() << std::endl;
 

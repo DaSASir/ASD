@@ -18,15 +18,16 @@ public:
 	BinaryTreeSearch(BinaryTreeSearch&& other) noexcept;
 	~BinaryTreeSearch() override = default;
 
-	int min() const override;
-	//int max() const override;
+	int min() const;
+	int max() const;
 
-	Node* add(const int key) override;
-	/*bool remove(const int key) override;
+	//Node* add(const int key);
+	using BinaryTree::add;
+	//bool remove(const int key) override;
 
-	Node* find(const int key) const override;
-	int level(const int key) const override;
-	std::vector<int> getVector() const override;
+	Node* find(const int key) const;
+	int level(const int key) const;
+	std::vector<int> getVector() const;
 
 	BinaryTreeSearch& operator = (const BinaryTreeSearch& other);
 	BinaryTreeSearch& operator = (BinaryTreeSearch&& other) noexcept;
@@ -34,13 +35,14 @@ public:
 	Iterator begin();
 	Iterator end();
 	ConstIterator begin() const;
-	ConstIterator end() const;*/
+	ConstIterator end() const;
 
 private:
 	Node* add(Node* root, const int key);
-	/*bool remove(Node* root, const int key);
+	//bool remove(Node* root, const int key);
 
-	Node* find(Node* root, const int key) const;*/
+	Node* find(Node* root, const int key) const;
+	int level(const Node* root, const int key, const int level_) const;
 
 
 };
@@ -49,7 +51,11 @@ template <typename T>
 class BinaryTreeSearch::TemplateIterator {
 public:
 	TemplateIterator(Node* cell) : m_cell(cell) {
-
+		if (m_cell)
+			while (m_cell->leftChild()) {
+				unprocessedNodes.push_back(m_cell);
+				m_cell = m_cell->leftChild();
+			}
 	}
 
 	T& operator*() {
@@ -61,7 +67,22 @@ public:
 	}
 
 	TemplateIterator operator++() {
+		if (!m_cell) return *this;
 
+		if (m_cell->rightChild()) {
+			m_cell = m_cell->rightChild();
+			while (m_cell->leftChild()) {
+				unprocessedNodes.push_back(m_cell);
+				m_cell = m_cell->leftChild();
+			}
+		}
+		else if (!unprocessedNodes.empty()) {
+			m_cell = unprocessedNodes.back();
+			unprocessedNodes.pop_back();
+		}
+		else m_cell = nullptr;
+
+		return *this;
 	}
 
 	TemplateIterator operator++(int) {
@@ -84,5 +105,5 @@ public:
 
 protected:
 	Node* m_cell = nullptr;
-
+	std::list<Node*> unprocessedNodes; //LNR
 };

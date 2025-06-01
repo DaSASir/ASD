@@ -23,7 +23,20 @@ int main() {
 	tree.printHorizontal();
 
 	std::cout << (tree.isEmpty() ? "empty\n" : "not empty\n");
-	std::cout << "Min: " << tree.min() << std::endl;
+
+	std::cout << "choose element: ";
+	int element;
+	std::cin >> element;
+	tree.remove(element);
+	tree.printHorizontal();
+
+
+
+
+	std::cout << "\nVector: ";
+	std::vector<int> gg = tree.getVector();
+	for (int i : gg) std::cout << i << " ";
+
 
 
 	return 0;

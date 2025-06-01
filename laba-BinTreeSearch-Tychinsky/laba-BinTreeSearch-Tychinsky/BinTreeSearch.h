@@ -21,9 +21,8 @@ public:
 	int min() const;
 	int max() const;
 
-	//Node* add(const int key);
 	using BinaryTree::add;
-	//bool remove(const int key) override;
+	bool remove(const int key);
 
 	Node* find(const int key) const;
 	int level(const int key) const;
@@ -38,13 +37,15 @@ public:
 	ConstIterator end() const;
 
 private:
+	int min(Node* root) const;
+	int max(Node* root) const;
+
 	Node* add(Node* root, const int key);
-	//bool remove(Node* root, const int key);
+	void remove(Node* node, Node* node2);
+	Node* findReplacementNode(Node* root) const;
 
 	Node* find(Node* root, const int key) const;
 	int level(const Node* root, const int key, const int level_) const;
-
-
 };
 
 template <typename T>

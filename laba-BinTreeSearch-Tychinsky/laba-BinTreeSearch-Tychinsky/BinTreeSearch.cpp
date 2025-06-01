@@ -13,9 +13,14 @@ BinaryTreeSearch::BinaryTreeSearch(BinaryTreeSearch&& other) noexcept
 	: BinaryTree(other) {}
 
 int BinaryTreeSearch::min() const {
-	if (!root()) return 0;
+	return min(root());
+}
 
-	Node* node = root();
+int BinaryTreeSearch::min(Node* root) const {
+	Node* node = root;
+
+	if (!node) return INT32_MIN;
+
 	while (node->leftChild())
 		node = node->leftChild();
 
@@ -23,32 +28,86 @@ int BinaryTreeSearch::min() const {
 }
 
 int BinaryTreeSearch::max() const {
-	if (!root()) return 0;
+	return max(root());
+}
 
-	Node* node = root();
+int BinaryTreeSearch::max(Node* root) const {
+	Node* node = root;
+
+	if (!node) return INT32_MAX;
+
 	while (node->rightChild())
 		node = node->rightChild();
 
 	return node->key();
 }
 
-//BinaryTree::Node* BinaryTreeSearch::add(const int key) {
-//	Node* node = root();
-//	if (node)
-//		return add(node, key);
-//	else
-//		return node = new Node(key);
-//}
-
 BinaryTree::Node* BinaryTreeSearch::add(Node* root, const int key) {
 	if (!root)
 		root = new Node(key);
 	else if (key < root->key())
 		root->setLeftChild(add(root->leftChild(), key));
-	else
+	else if(key > root->key())
 		root->setRightChild(add(root->rightChild(), key));
 
 	return root;
+}
+
+bool BinaryTreeSearch::remove(const int key) {
+	Node* node = find(key);
+	if (!node) return false;
+
+	if (!node->leftChild() && !node->rightChild()) 
+		remove(node, nullptr);
+	else if(!node->leftChild() || !node->rightChild()){
+		Node* replacementNode = (node->leftChild()) ? node->leftChild() : node->rightChild();
+		remove(node, replacementNode);
+	}
+	else {
+		Node* replacementNode = findReplacementNode(node);
+		Node* nodeParent = findParent(replacementNode);
+
+		node->setKey(replacementNode->key());
+
+		if (!replacementNode->leftChild() && !replacementNode->rightChild()) 
+			remove(replacementNode, nullptr);
+		else if (!replacementNode->leftChild() || !replacementNode->rightChild()) {
+			Node* replacementNode2 = (replacementNode->leftChild()) ? replacementNode->leftChild() : replacementNode->rightChild();
+			remove(replacementNode, replacementNode2);
+		}
+	}
+
+	return true;
+}
+
+void BinaryTreeSearch::remove(Node* node, Node* node2) {
+	Node* nodeParent = findParent(node);
+
+	if (nodeParent->leftChild() == node)
+		nodeParent->setLeftChild(node2);
+	else
+		nodeParent->setRightChild(node2);
+
+	delete node;
+}
+
+BinaryTree::Node* BinaryTreeSearch::findReplacementNode(Node* root) const {
+	if (!root) return nullptr;
+
+	if (root->leftChild()) {
+		Node* maxInLeft = root->leftChild();
+		int result = max(maxInLeft);
+		if (result != INT32_MAX)
+			return maxInLeft;
+	}
+	else if (root->rightChild()) {
+		Node* minInRight = root->rightChild();
+		int result = min(minInRight);
+		if (result != INT32_MIN)
+			return minInRight;
+	}
+
+	return nullptr;
 }
 
 BinaryTree::Node* BinaryTreeSearch::find(const int key) const {

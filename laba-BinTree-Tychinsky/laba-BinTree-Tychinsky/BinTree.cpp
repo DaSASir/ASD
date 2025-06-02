@@ -177,14 +177,10 @@ BinaryTree::Node* BinaryTree::findReplacementNode(Node* root) const {
 
 	Node* result = nullptr;
 
-	if (rand() % 2) {
-		if (root->leftChild())
-			result = findReplacementNode(root->leftChild());
-	}
-	else {
-		if (root->rightChild())
-			result = findReplacementNode(root->rightChild());
-	}
+	if ((rand() % 2 && root->leftChild()) || !root->rightChild())
+		result = findReplacementNode(root->leftChild());
+	else
+		result = findReplacementNode(root->rightChild());
 
 	if (!result && !root->leftChild() && !root->rightChild())
 		return root;

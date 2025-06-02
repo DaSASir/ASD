@@ -14,10 +14,15 @@ int main() {
 
     BinaryTree tree(v);
     std::cout << "\n\nTree: \n";
-    tree.printByLevels();
+    tree.printHorizontal();
     
+    std::cout << "DEL choose el: ";
+    int delEl;
+    std::cin >> delEl;
+    tree.remove(delEl);
+
     BinaryTree a = tree;
-    a.printByLevels();
+    a.printHorizontal();
 
     return 0;
 }

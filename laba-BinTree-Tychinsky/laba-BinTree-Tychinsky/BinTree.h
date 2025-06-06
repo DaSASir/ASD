@@ -28,12 +28,12 @@ public:
 	int height() const;
 	int countOfNodes() const;
 
-	virtual std::vector<int> getVector() const;
+	std::vector<int> getVector() const;
 
 	virtual int min() const;
 	virtual int max() const;
 
-	virtual Node* add(const int key);
+	Node* add(const int key);
 	virtual bool remove(const int key);
 
 	virtual Node* find(const int key) const;
@@ -57,12 +57,12 @@ protected:
 	Node* copy(const Node* root) const;
 
 	Node* findParent(const Node* root) const;
-	Node* findReplacementNode(Node* root) const;
+	virtual Node* findReplacementNode(Node* root) const;
 
 	int height(const Node* root) const;
 	void getVector(const Node* node, std::vector<int>& keys) const;
 
-	Node* add(Node* root, const  int key);
+	virtual Node* add(Node* root, const  int key);
 	Node* nlrSearch(Node* root, const  int key) const;
 
 	bool isBalanced(const Node* root) const;
@@ -152,4 +152,70 @@ public:
 protected:
 	Node* m_cell = nullptr;
 	std::list<Node*> unprocessedNodes; //BFS
+};
+
+
+class BinaryTreeTester {
+public:
+	BinaryTreeTester(const bool useConsoleOutput, const bool enableAllTests = true);
+	virtual ~BinaryTreeTester() = default;
+
+	void test(const int size);
+
+	bool useConsoleOutput() const;
+	bool addAndCountCheckEnabled() const;
+	bool destructorCheckEnabled() const;
+	bool removeCheckEnabled() const;
+	bool clearCheckEnabled() const;
+	bool assignCheckEnabled() const;
+	bool heightCheckEnabled() const;
+
+	void setUseConsoleOutput(const bool enabled);
+	void setAddAndCountCheckEnabled(const bool enabled);
+	void setDestructorCheckEnabled(const bool enabled);
+	void setRemoveCheckEnabled(const bool enabled);
+	void setClearCheckEnabled(const bool enabled);
+	void setAssignCheckEnabled(const bool enabled);
+	void setHeightCheckEnabled(const bool enabled);
+
+protected:
+	using TreeNodes = std::vector<BinaryTree::Node*>;
+
+protected:
+	int invalidKey() const;
+
+	virtual BinaryTree* allocateTree();
+	virtual void check_addAndCount(const BinaryTree* tree, const int size);
+	virtual void check_remove(BinaryTree* tree, const int key, const bool result, const int size);
+	virtual void check_clear(const BinaryTree* tree, const int size);
+	virtual void check_assign(const BinaryTree* first, const BinaryTree* second);
+	virtual void check_height(const BinaryTree& tree, const int size);
+
+protected:
+	virtual void assign();
+	std::vector<int> generateKeys();
+	int m_maxSize;
+
+private:
+	void deallocateTree(BinaryTree* tree);
+	void addAndCount();
+	void destructor();
+	void remove();
+	void clear(); //ToDo: реализовать
+	void height();
+	void height_trivialCases();
+	void height_longOnlyLeftSubtree();
+	void height_longOnlyRightSubtree();
+	void height_longOnlyLeftAndRightSubtrees();
+	void height_longRandomZigzagSubtrees();
+	TreeNodes treeNodes(const BinaryTree* tree);
+
+private:
+	bool m_useConsoleOutput;
+	bool m_addAndCountCheckEnabled;
+	bool m_destructorCheckEnabled;
+	bool m_removeCheckEnabled;
+	bool m_clearCheckEnabled;
+	bool m_assignCheckEnabled;
+	bool m_heightCheckEnabled;
 };

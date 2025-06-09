@@ -5,6 +5,8 @@
 #include <vector>
 #include <list>
 
+static const int myNumber = 17;
+
 enum class HashFunction {
 	hash1, hash2, hash3
 };
@@ -36,24 +38,26 @@ public:
 
 private:
 	//hash-functions
-	int hash() const;
+	int hash(const T key) const;
 
 	//hi(K) = (h(i - 1)(K) + c × i + d × i^2) mod N
-	int hashFunction1() const;
+	int hashFunction1(const T key) const;
 
-	//hi(K) = [h(i - 1)(K) × a × N] mod N; a = – (1 – √5) ÷ 2
-	int hashFunction2() const;
+	//hi(K) = [h(i - 1)(K) × a × N] mod N
+	int hashFunction2(const T key) const;
 
 	//hi(K) = ((K mod N) + i × (1 + K mod (N – 2))) mod N
-	int hashFunction3() const;
+	int hashFunction3(const T key) const;
 
 	//a = –(1 – √5) ÷ 2
 	//c и d определяются как остаток от деления вашего номера в списке группы на 5 и 7 соответственно
-	int a = (-(1 - sqrt(5))) % 2;
-	int c, d;
+	int a = (-(1 - sqrt(5))) / 2;
+	int c = myNumber % 5;
+	int d = myNumber % 7;
 
 private://Метод открытой адресации
 	std::vector<T> m_openTable;
+	std::vector<bool> m_openActive;
 
 	void addOpenMethod(const T key);
 	void removeOpenMethod(const T key);
@@ -75,6 +79,9 @@ private://Метод внешних цепочек
 
 private:
 	int m_size;
+	int m_countValues = 0;
+	int m_lastIndex = 0;
+
 	HashFunction m_function;
 	CollisionsMethod m_method;
 };
@@ -93,7 +100,9 @@ struct HashTable<T>::Node {
 //необходимые функции
 template<typename T>
 HashTable<T>::HashTable(HashFunction function, CollisionsMethod method, const int size)
-	: m_function(function), m_method(method), m_size(size) {};
+	: m_function(function), m_method(method) {
+	setSize(size);
+}
 
 template<typename T>
 HashTable<T>::HashTable(const HashTable& other) {
@@ -102,7 +111,18 @@ HashTable<T>::HashTable(const HashTable& other) {
 
 template<typename T>
 HashTable<T>::~HashTable() {
+	switch (m_method) {
+	case CollisionsMethod::open:
+		break;
 
+	case CollisionsMethod::inside:
+		for (int i = 0; i < m_size; i++)
+			delete m_insideTable[i];
+		break;
+
+	case CollisionsMethod::outside:
+		break;
+	}
 }
 
 template<typename T>
@@ -155,17 +175,70 @@ bool HashTable<T>::isThere(const T key) const {
 
 template<typename T>
 void HashTable<T>::swap(HashTable<T>& other) {
+	std::swap(m_size, other.m_size);
+	std::swap(m_method, other.m_method);
+	std::swap(m_function, other.m_function);
 
+	switch (m_method) {
+	case CollisionsMethod::open:
+		std::swap(m_openTable, other.m_openTable);
+		std::swap(m_openActive, other.m_openActive);
+		break;
+
+	case CollisionsMethod::inside:
+		std::swap(m_insideTable, other.m_insideTable);
+		break;
+
+	case CollisionsMethod::outside:
+		std::swap(m_outsideTable, other.m_outsideTable);
+		break;
+	}
 }
 
 template<typename T>
 void HashTable<T>::print() const {
+	std::cout << "Hash-Table: \n";
+	std::cout << "---------------------\n";
+	switch (m_method) {
+	case CollisionsMethod::open:
+		for (int i = 0; i < m_size; i++) {
+			if (!m_openActive[i]) 
+				std::cout << "none" << std::endl;
+			else
+				std::cout << m_openTable[i] << std::endl;
+		}
 
+		break;
+
+	case CollisionsMethod::inside:
+
+		break;
+
+	case CollisionsMethod::outside:
+
+		break;
+	}
+	std::cout << "---------------------\n";
 }
 
 template<typename T>
 void HashTable<T>::setSize(const int size) {
 	m_size = size;
+
+	switch (m_method) {
+	case CollisionsMethod::open:
+		m_openTable = std::vector<T>(m_size);
+		m_openActive = std::vector<bool>(m_size, false);
+		break;
+
+	case CollisionsMethod::inside:
+		m_insideTable = std::vector<Node*>(m_size);
+		break;
+
+	case CollisionsMethod::outside:
+		m_outsideTable = std::vector<std::list<T>>(m_size);
+		break;
+	}
 }
 
 template<typename T>
@@ -176,8 +249,123 @@ HashTable<T>& HashTable<T>::operator = (const HashTable& other) {
 
 template<typename T>
 T& HashTable<T>::operator [](const int index) {
+	if (index < 0) index = 0;
+	else if (index >= m_size) index = m_size - 1;
+
+	switch (m_method) {
+	case CollisionsMethod::open:
+		break;
+
+	case CollisionsMethod::inside:
+		break;
+
+	case CollisionsMethod::outside:
+		break;
+	}
 	return 0;
 }
 
+//фарш-функции
+template<typename T>
+int HashTable<T>::hash(const T key) const {
+	int index = 0;
+	switch (m_function) {
+	case HashFunction::hash1:
+		index = hashFunction1(key);
+		break;
 
+	case HashFunction::hash2:
+		index =  hashFunction2(key);
+		break;
 
+	case HashFunction::hash3:
+		index = hashFunction3(key);
+		break;
+	}
+
+	if (index < 0) index *= -1;
+	return index;
+}
+
+template<typename T>
+int HashTable<T>::hashFunction1(const T key) const {
+	if (m_countValues == 0) return (key % m_size);
+	return (m_lastIndex + (c * m_countValues) + (d * m_countValues * m_countValues)) % m_size;
+}
+
+template<typename T>
+int HashTable<T>::hashFunction2(const T key) const {
+	if (m_countValues == 0) return (key % m_size);
+	return (m_lastIndex * a * m_size) / m_size;
+}
+
+template<typename T>
+int HashTable<T>::hashFunction3(const T key) const {
+	if (m_countValues == 0) return (key % m_size);
+	return ((key % m_size) + m_countValues * (1 + (key % (m_size - 2)))) % m_size;
+}
+
+//Метод открытой адресации
+template<typename T>
+void HashTable<T>::addOpenMethod(const T key) {
+	if (m_countValues == m_size) return;
+
+	int index = hash(key);
+	if (m_openActive[index] == false) {
+		m_openTable[index] = key;
+		m_openActive[index] = true;
+	}
+	else {
+		for (int i = 0; i < m_size; i++) {
+			if (m_openActive[i] == false) {
+				m_openTable[i] = key;
+				m_openActive[i] = true;
+			}
+		}
+	}
+
+	m_countValues++;
+	m_lastIndex = index;
+}
+
+template<typename T>
+void HashTable<T>::removeOpenMethod(const T key) {
+	
+}
+
+template<typename T>
+bool HashTable<T>::hasOpenMethod(const T key) const {
+	return 0;
+}
+
+//Метод внутренних цепочек
+template<typename T>
+void HashTable<T>::addInsideMethod(const T key) {
+
+}
+
+template<typename T>
+void HashTable<T>::removeInsideMethod(const T key) {
+
+}
+
+template<typename T>
+bool HashTable<T>::hasInsideMethod(const T key) const {
+	return 0;
+}
+	
+//Метод внешних цепочек
+template<typename T>
+void HashTable<T>::addOutsideMethod(const T key) {
+
+}
+
+template<typename T>
+void HashTable<T>::removeOutsideMethod(const T key) {
+
+}
+
+template<typename T>
+bool HashTable<T>::hasOutsideMethod(const T key) const {
+	return 0;
+}

@@ -2,34 +2,39 @@
 #include <string.h>
 #include "HashTable.h"
 
+const int sizeV = 10;
+
 int main() {
     setlocale(LC_ALL, "ru");
     srand(time(0));
 
-    std::vector<int> nums = { -5, 2, -7, -5, -2 , 2, -8, 6,-1, 6, 7, 5 };
-    /*for (int i = 0; i < 12; i++)
-        nums.push_back(rand() % (10 * 2 - 1) - 10);*/
+    std::vector<int> nums;
+    for (int i = 0; i < sizeV; i++)
+        nums.push_back(rand() % (sizeV * 2 - 1) - sizeV);
 
     std::cout << "Vector: ";
     for (int e : nums) std::cout << e << " ";
     std::cout << std::endl;
 
+    HashTable<int> table(HashFunction::hash1, CollisionsMethod::open, 5);
 
-    std::vector<int> num;
-    num.push_back(5);
-    for (int i = 1; i < 12; i++) {
-        num.push_back((num[i - 1] + 2 * i + 3 * i * i) % 12);
-    }
-    std::cout << std::endl;
-    std::cout << std::endl;
-    for (int e : num) std::cout << e << " ";
-    std::cout << std::endl;
-    std::cout << std::endl;
-
-    HashTable<int> table(HashFunction::hash1, CollisionsMethod::open, 12);
-    for (int i = 0; i < 12; i++)
+    for (int i = 0; i < sizeV; i++)
         table.add(nums[i]);
+
+    std::cout << "\nHash-Table:";
     table.print();
+
+    int del;
+    std::cout << "choose del: ";
+    std::cin >> del;
+
+    table.remove(del);
+    table.print();
+
+    int u;
+    std::cout << "choose index of table: ";
+    std::cin >> u;
+    std::cout << "element with index: " << table[u];
 
 
     return 0;

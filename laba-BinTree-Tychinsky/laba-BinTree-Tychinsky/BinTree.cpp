@@ -142,10 +142,14 @@ bool BinaryTree::remove(const int key) {
 	if (!node->leftChild() && !node->rightChild()) {
 		Node* nodeParent = findParent(node);
 
-		if (nodeParent->leftChild() == node)
-			nodeParent->setLeftChild(nullptr);
-		else
-			nodeParent->setRightChild(nullptr);
+        if (!nodeParent)
+            m_root = nullptr;
+        else {
+            if (nodeParent->leftChild() == node)
+                nodeParent->setLeftChild(nullptr);
+            else
+                nodeParent->setRightChild(nullptr);
+        }
 
 		delete node;
 	}

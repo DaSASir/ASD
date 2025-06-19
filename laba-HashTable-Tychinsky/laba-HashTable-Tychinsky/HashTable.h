@@ -62,7 +62,7 @@ class HashTable {
 public:
 	HashTable(int size = 0, IHashFunction* function = new HashFunction1());
 	HashTable(const HashTable& other);
-	~HashTable();
+    ~HashTable();
 
 	void resize(const int size);
 	int size() const;
@@ -78,6 +78,8 @@ public:
 
 	HashTable& operator = (const HashTable& other);
 	T& operator [](const int key);
+
+    const std::vector<std::list<std::pair<int, T>>>& table() const;
 
 private:
 	std::vector<std::list<std::pair<int, T>>> m_hashTable;
@@ -97,8 +99,8 @@ HashTable<T>::HashTable(const HashTable& other)
 	, m_function(other.m_function->clone()) {}
 
 template<typename T>
-HashTable<T>::~HashTable() { 
-	delete m_function;
+HashTable<T>::~HashTable() {
+    delete m_function;
 }
 
 template<typename T>
@@ -181,7 +183,7 @@ void HashTable<T>::changeHashFunction(IHashFunction* newFunction) {
 		}
 	}
 
-	delete m_function;
+    delete m_function;
 	m_function = newFunction;
 	m_hashTable = newTable;
 }
@@ -190,8 +192,8 @@ template<typename T>
 HashTable<T>& HashTable<T>::operator = (const HashTable& other) {
 	if (this != &other) {
 		m_size = other.m_size;
+        delete m_function;
 		m_hashTable = other.m_hashTable;
-		delete m_function;
 		m_function = other.m_function->clone();
 	}
 
@@ -207,4 +209,9 @@ T& HashTable<T>::operator [](const int key) {
 
 	this->add(key, T());
 	return m_hashTable[index].back().second;
+}
+
+template<typename T>
+const std::vector<std::list<std::pair<int, T>>>& HashTable<T>::table() const {
+    return m_hashTable;
 }

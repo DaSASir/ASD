@@ -7,12 +7,6 @@
 
 #include "BaseHashTableWidget.h"
 
-/**
- * @brief Класс виджета хеш-таблицы, основанной на методе внешних цепочек.
- * Для его реализации элементы таблицы размещаются на сцене (QGraphicsScene).
- *
- * см. также класс `TableElementWidget`.
- */
 class SceneHashTableWidget : public BaseHashTableWidget
 {
 public:
@@ -21,15 +15,10 @@ public:
 protected slots:
     void addKeyValue() override;
     void resizeTable() override;
+    void findByKey() override;
+    void removeByKey() override;
 
 private:
-    /**
-     * @brief На QGraphicsScene нельзя размещать виждеты напрямую;
-     * Сцена может хранить только наследников класса QGraphicsItem.
-     * Поэтому при попытке добавления виджета на сцену (см. `addElement`)
-     * сцена автоматически создаст для него специальный объект-контейнер типа QGraphicsProxyWidget.
-     * Данная структура нужна для сопоставления виждета элемента таблицы с его контейнером.
-     */
     struct ElementData
     {
         TableElementWidget* widget = nullptr;
@@ -37,24 +26,12 @@ private:
     };
 
 private:
-    /**
-     * @brief Добавляет пустой элемент хеш-таблицы на сцену.
-     * @param row индекс строки элемента.
-     * @param column индекс столбца (коллизии) элемента.
-     */
     void addBlankElement(int row, int column);
+    void updateTable();
+    void clearScene();
 
 private:
-    /**
-     * @brief Сцена, на которой размещаются элементы таблицы.
-     */
-    QGraphicsScene *m_scene = nullptr;
-
-    /**
-     * @brief Класс, отвечающий за отображение заданной области сцены
-     * (сцена может быть намного больше видимой части).
-     */
-    QGraphicsView *m_view = nullptr;
-
+    QGraphicsScene *m_scene = nullptr; //Сцена, на которой размещаются элементы таблицы.
+    QGraphicsView *m_view = nullptr;//отображение заданной области сцены (сцена может быть намного больше видимой части)
     QVector<QVector<ElementData>> m_rows;
 };

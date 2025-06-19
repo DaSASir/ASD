@@ -4,10 +4,13 @@
 BaseHashTableWidget::BaseHashTableWidget(QWidget *parent)
     : QWidget(parent)
     , ui(new Ui::BaseHashTableWidget)
+    , m_hashTable(new HashTable<QString>(3))
 {
     ui->setupUi(this);
     connect(ui->spinBox_size, &QSpinBox::editingFinished, this, &BaseHashTableWidget::resizeTable);
     connect(ui->pushButton_add, &QPushButton::clicked, this, &BaseHashTableWidget::addKeyValue);
+    connect(ui->pushButton_find, &QPushButton::clicked, this, &BaseHashTableWidget::findByKey);
+    connect(ui->pushButton_remove, &QPushButton::clicked, this, &BaseHashTableWidget::removeByKey);
 }
 
 BaseHashTableWidget::~BaseHashTableWidget()
@@ -17,6 +20,5 @@ BaseHashTableWidget::~BaseHashTableWidget()
 
 void BaseHashTableWidget::onValueChanged(int key, const QString &value)
 {
-//    value.toStdString()
-    // TODO: записать новое значение в хеш-таблицу
+    (*m_hashTable)[key] = value;
 }
